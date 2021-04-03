@@ -1,4 +1,4 @@
-module github.com/branogarbo/funcRacer
+module github.com/branogarbo/funcTimer
 
 go 1.16
 
