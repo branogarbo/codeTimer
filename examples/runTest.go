@@ -4,13 +4,13 @@ import (
 	"log"
 	"time"
 
-	util "github.com/branogarbo/funcTimer"
-	img "github.com/branogarbo/imgcli/util"
+	ft "github.com/branogarbo/funcTimer"
+	ic "github.com/branogarbo/imgcli/util"
 )
 
 func main() {
 
-	util.RunTests(map[interface{}]func() interface{}{
+	ft.RunTests(map[interface{}]func() interface{}{
 		"fast func": func() interface{} {
 			time.Sleep(1 * time.Second)
 
@@ -22,7 +22,7 @@ func main() {
 			return "second test output"
 		},
 		"imgcli conversion": func() interface{} {
-			_, err := img.OutputImage(img.OutputConfig{
+			_, err := ic.OutputImage(ic.OutputConfig{
 				Src:          "../imgcli/examples/images/portrait.jpg",
 				OutputMode:   "ascii",
 				AsciiPattern: " .:-=+*#%@",
