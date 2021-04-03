@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	ft "github.com/branogarbo/funcTimer"
+	ft "github.com/branogarbo/codeTimer"
 	ic "github.com/branogarbo/imgcli/util"
 )
 
