@@ -1,9 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"sync"
+	"log"
 	"time"
+
+	img "github.com/branogarbo/imgcli/util"
 )
 
 type TestOutput struct {
@@ -13,14 +14,8 @@ type TestOutput struct {
 }
 
 func main() {
-	var (
-		wg          sync.WaitGroup
-		testOutputs []TestOutput
-	)
 
-	testOutputChan := make(chan TestOutput)
-
-	funcs := map[interface{}]func() interface{}{
+	RunTests(map[interface{}]func() interface{}{
 		"fast func": func() interface{} {
 			time.Sleep(1 * time.Second)
 
@@ -31,43 +26,22 @@ func main() {
 
 			return "second test output"
 		},
-	}
-
-	/////////////////////////////
-
-	wg.Add(len(funcs))
-
-	fmt.Println("starting tests...")
-
-	for funcName, function := range funcs {
-		go func(funcName interface{}, function func() interface{}) {
-			startTime := time.Now().UTC()
-
-			out := function()
-
-			duration := time.Now().UTC().Sub(startTime)
-
-			wg.Done()
-
-			testOutput := TestOutput{
-				FuncName: funcName,
-				Duration: duration,
-				Out:      out,
+		"imgcli conversion": func() interface{} {
+			_, err := img.OutputImage(img.OutputConfig{
+				Src:          "../imgcli/examples/images/portrait.jpg",
+				OutputMode:   "ascii",
+				AsciiPattern: " .:-=+*#%@",
+				OutputWidth:  500,
+			})
+			if err != nil {
+				log.Fatal(err)
 			}
 
-			testOutputs = append(testOutputs, testOutput)
-			testOutputChan <- testOutput
-		}(funcName, function)
-	}
+			return nil
+		},
+		"empty func": func() interface{} {
+			return nil
+		},
+	})
 
-	wg.Wait()
-
-	select {
-	case firstOut := <-testOutputChan:
-		fmt.Printf(`test "%v" finished first: %v`+"\n", firstOut.FuncName, firstOut)
-	default:
-		fmt.Println("no test provided an output")
-	}
-
-	fmt.Println("tests:", testOutputs)
 }
