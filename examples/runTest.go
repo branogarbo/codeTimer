@@ -1,21 +1,16 @@
-package main
+package examples
 
 import (
 	"log"
 	"time"
 
+	"github.com/branogarbo/funcRacer/util"
 	img "github.com/branogarbo/imgcli/util"
 )
 
-type TestOutput struct {
-	FuncName interface{}
-	Duration time.Duration
-	Out      interface{}
-}
-
 func main() {
 
-	RunTests(map[interface{}]func() interface{}{
+	util.RunTests(map[interface{}]func() interface{}{
 		"fast func": func() interface{} {
 			time.Sleep(1 * time.Second)
 
