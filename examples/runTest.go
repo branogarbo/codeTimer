@@ -1,10 +1,10 @@
-package examples
+package main
 
 import (
 	"log"
 	"time"
 
-	"github.com/branogarbo/funcRacer/util"
+	util "github.com/branogarbo/funcTimer"
 	img "github.com/branogarbo/imgcli/util"
 )
 
