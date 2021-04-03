@@ -4,13 +4,13 @@ import (
 	"log"
 	"time"
 
-	ft "github.com/branogarbo/codeTimer"
+	ct "github.com/branogarbo/codeTimer"
 	ic "github.com/branogarbo/imgcli/util"
 )
 
 func main() {
 
-	ft.RunTests(map[interface{}]func() interface{}{
+	ct.RunTests(map[interface{}]func() interface{}{
 		"fast func": func() interface{} {
 			time.Sleep(1 * time.Second)
 
