@@ -15,18 +15,18 @@
 package codeTimer
 
 import (
-	"fmt"
+	"errors"
 	"sync"
 	"time"
 )
 
 type TestOutput struct {
-	FuncName interface{}
-	Duration time.Duration
-	Out      interface{}
+	FuncName   interface{}
+	Duration   time.Duration
+	FuncOutput interface{}
 }
 
-func RunTests(funcs map[interface{}]func() interface{}) {
+func RunTests(funcs map[interface{}]func() interface{}) (TestOutput, []TestOutput, error) {
 	var (
 		wg          sync.WaitGroup
 		testOutputs []TestOutput
@@ -36,22 +36,20 @@ func RunTests(funcs map[interface{}]func() interface{}) {
 
 	wg.Add(len(funcs))
 
-	fmt.Println("starting tests...")
-
 	for funcName, function := range funcs {
 		go func(funcName interface{}, function func() interface{}) {
 			startTime := time.Now().UTC()
 
-			out := function()
+			funcOutput := function()
 
 			duration := time.Now().UTC().Sub(startTime)
 
 			wg.Done()
 
 			testOutput := TestOutput{
-				FuncName: funcName,
-				Duration: duration,
-				Out:      out,
+				FuncName:   funcName,
+				Duration:   duration,
+				FuncOutput: funcOutput,
 			}
 
 			testOutputs = append(testOutputs, testOutput)
@@ -63,10 +61,8 @@ func RunTests(funcs map[interface{}]func() interface{}) {
 
 	select {
 	case firstOut := <-testOutputChan:
-		fmt.Printf(`test "%v" finished first: %v`+"\n", firstOut.FuncName, firstOut)
+		return firstOut, testOutputs, nil
 	default:
-		fmt.Println("no value sent to testOutputChan")
+		return TestOutput{}, []TestOutput{}, errors.New("no value sent to testOutputChan")
 	}
-
-	fmt.Println("tests:", testOutputs)
 }

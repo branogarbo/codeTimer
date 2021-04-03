@@ -1,16 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
 	ct "github.com/branogarbo/codeTimer"
-	ic "github.com/branogarbo/imgcli/util"
 )
 
 func main() {
-
-	ct.RunTests(map[interface{}]func() interface{}{
+	funcMap := map[interface{}]func() interface{}{
 		"fast func": func() interface{} {
 			time.Sleep(1 * time.Second)
 
@@ -21,22 +20,28 @@ func main() {
 
 			return "second test output"
 		},
-		"imgcli conversion": func() interface{} {
-			_, err := ic.OutputImage(ic.OutputConfig{
-				Src:          "../imgcli/examples/images/portrait.jpg",
-				OutputMode:   "ascii",
-				AsciiPattern: " .:-=+*#%@",
-				OutputWidth:  500,
-			})
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			return nil
-		},
 		"empty func": func() interface{} {
 			return nil
 		},
-	})
+		"inc": func() interface{} {
+			num := 0
+
+			for i := 0; i < 99999999; i++ {
+				num++
+			}
+
+			return num
+		},
+	}
+
+	firstOutput, outputs, err := ct.RunTests(funcMap)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("first output:", firstOutput)
+	for _, output := range outputs {
+		fmt.Println(output)
+	}
 
 }
