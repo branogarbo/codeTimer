@@ -26,6 +26,8 @@ type TestOutput struct {
 	FuncOutput interface{}
 }
 
+type FuncMap map[interface{}]func() interface{}
+
 func RunTests(funcs map[interface{}]func() interface{}) (TestOutput, []TestOutput, error) {
 	var (
 		wg          sync.WaitGroup

@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	funcMap := map[interface{}]func() interface{}{
+	funcs := ct.FuncMap{
 		"fast func": func() interface{} {
 			time.Sleep(1 * time.Second)
 
@@ -34,7 +34,7 @@ func main() {
 		},
 	}
 
-	firstOutput, outputs, err := ct.RunTests(funcMap)
+	firstOutput, outputs, err := ct.RunTests(funcs)
 	if err != nil {
 		log.Fatal(err)
 	}
